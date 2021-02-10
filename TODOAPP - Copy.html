@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>To Do App In Js</title>
+        <!-- <link href="bootstrap.css" rel="stylesheet"> -->
+        <style>
+            body{
+                position: absolute;
+                background-image: url(freeimg.jpg);
+                background-repeat: no-repeat;
+                font-family: 'Times New Roman', Times, serif;
+                font-size: 20px;
+            }
+            .container{
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                margin-top: -9em;
+                margin-left: -15em;
+                padding: 10px;
+                width: 25em;
+                height: auto;
+                border-radius: 10px;
+                backdrop-filter: blur(2px);
+                box-shadow: black 5px 5px 2em;
+            }
+            
+            button{
+                height: 35px;
+                width:90px;
+                margin-left: -15px;
+                border-radius: 3px;
+                background-color: rgb(58, 170, 46);
+                border-color: rgba(59, 224, 67, 0);
+                font-size: medium;
+                cursor: pointer;
+                color: #fff;
+            }
+            button:hover{
+                transform:translate(0.2,5);
+                background-color: green;
+            }
+            #delBtn{
+                size: 50px;
+                height: 30px;
+                width:70px;
+                border-radius: 3px;
+                background-color: rgb(221, 43, 37);
+                border-color: rgba(221, 43, 37, 0);
+                font-size: medium;
+                color: #fff;
+                cursor: pointer;
+            }
+            #delBtn:hover{
+                
+                background-color: red;
+            }
+            #doneBtn{
+                size: 50px;
+                height: 30px;
+                width:70px;
+                border-radius: 3px;
+                background-color: rgb(40, 51, 212);
+                border-color: rgba(40, 42, 206, 0);
+                font-size: medium;
+                color: #fff;
+                cursor: pointer;
+            }
+            #doneBtn:hover{
+                
+                background-color: blue;
+            }
+            input{
+                margin: 20px;
+                height: 30px;
+                width:70%;
+                font-size: 20px;
+            }
+            input:focus{
+                transform:scale(1.1)
+            }
+            #taskTable{
+                padding: 20px;
+                height: auto;
+                width: 100%;
+                text-align: center;
+                background-color: #fff;
+            }
+            tr:hover
+            {
+                
+                padding: 20px;
+                transform: scale(1.1);
+                background-color: #ddd;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h2 style="text-align: center;">To Do Application</h2>
+            <input type="text" id="myInput" placeholder="Enter a task">
+            <button onclick="addTask()">Add Task</button><br>
+            <div id="tasklist" style="text-align: left; font-size: 20px; padding: 10px; margin: 10px;">
+                <table id="taskTable">
+                    
+                </table>
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript">
+        var id=0;
+        var taskarray=[];
+        // checking localstorage data exists or not
+        if(localStorage.getItem("todo_data") != null)
+        {
+            taskarray=JSON.parse(localStorage.getItem("todo_data"));
+            console.log(taskarray);
+            showTask();
+        }
+        
+        //Addtask btn function
+        function addTask(){
+            var task=document.getElementById("myInput").value.trim();
+            if(task=="")//if input is empty
+            {
+                alert("Please enter task.");
+            }
+            else
+            {
+                taskarray.push(task);
+                localStorage.setItem("todo_data",JSON.stringify(taskarray));
+                console.log(localStorage.getItem("todo_data"));
+                showTask();
+            }
+        }
+            //delete btn function
+        function deleteTask(id)
+        {
+            taskarray.splice(id,1);
+            localStorage.setItem("todo_data",JSON.stringify(taskarray));
+            console.log(taskarray)
+            console.log(localStorage.getItem("todo_data"));
+            showTask();
+        }
+
+        function taskDone(id)
+        {
+            if(taskarray[id].includes("<strike>"))
+            {
+                taskarray[id]=taskarray[id].replace("<strike>","");
+                taskarray[id]=taskarray[id].replace("</strike>","");
+            }
+            else{
+                taskarray[id]="<strike>"+taskarray[id]+"</strike>";
+            }
+            
+            localStorage.setItem("todo_data",JSON.stringify(taskarray));
+            showTask();
+        }
+        //show task function
+        function showTask(){
+            document.getElementById("taskTable").innerHTML="";
+            for(var i=0;i<taskarray.length;i++){
+                document.getElementById("taskTable").innerHTML+="<tr><td>"+taskarray[i]+"</td><td><button id='doneBtn' onclick='taskDone("+i+")'>Done</button></td><td><button id='delBtn' onclick='deleteTask("+i+")'>Delete</button></td></tr>";
+            }
+        }
+    </script>
+</html>
